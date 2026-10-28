@@ -496,7 +496,7 @@
     <nav class="nav-bar">
       <div class="nav-tab active" onclick="switchTab('citadel')">🏰 Citadel Sim</div>
       <div class="nav-tab" onclick="switchTab('gauntlet')">⚡ 24H Gauntlet</div>
-      <div class="nav-tab" onclick="switchTab('radar')">📡 Lead Radar (31)</div>
+      <div class="nav-tab" onclick="switchTab('radar')">📡 Lead Radar (46)</div>
       <div class="nav-tab" onclick="switchTab('bounties')">⚔️ Bounties (4)</div>
       <div class="nav-tab" onclick="switchTab('bank')">🏦 Sovereign Bank</div>
     </nav>
@@ -508,7 +508,7 @@
           <span>●</span> AUTONOMOUS CITADEL // 5 ACTIVE GUILDS
         </div>
         <div class="sim-metrics">
-          <div>POPULATION: <span class="sim-metric-val mono" id="simPop">31</span></div>
+          <div>POPULATION: <span class="sim-metric-val mono" id="simPop">46</span></div>
           <div>MINIONS: <span class="sim-metric-val mono">5</span></div>
           <div>CYCLE: <span class="sim-metric-val mono text-emerald" id="simCycle">#14</span></div>
         </div>
@@ -538,8 +538,8 @@
       </div>
       <div class="stat-card">
         <div class="stat-label">Outbound Leads</div>
-        <div class="stat-number mono text-amber" id="statLeads">31</div>
-        <div class="stat-sub" id="statDispatched">14 Dispatched / 17 In Queue</div>
+        <div class="stat-number mono text-amber" id="statLeads">46</div>
+        <div class="stat-sub" id="statDispatched">28 Dispatched / 18 In Queue</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">GitHub Bounties</div>
@@ -598,7 +598,7 @@
     <div id="tab-radar" class="section-card">
       <div class="sec-header">
         <div class="sec-title">
-          <span>📡</span> REAL-MARKET CONTRACTOR RADAR (31 PROSPECTS)
+          <span>📡</span> REAL-MARKET CONTRACTOR RADAR (46 PROSPECTS)
         </div>
         <span class="sec-badge mono">BREVO HTTPS PORT 443</span>
       </div>
@@ -716,38 +716,329 @@
     // 1. REAL PROSPECT DATABASE SNAPSHOT
     // -------------------------------------------------------------------------
     const REAL_LEADS = [
-      { name: "Visionary Surplus Recovery LLC", email: "intake@visionarysurplusrecovery.com", city: "St. Petersburg, FL", niche: "Surplus Asset Recovery ($47 Vault)", status: "DISPATCHED" },
-      { name: "Action Air Conditioning", email: "info@actionairconditioning.com", city: "Tampa, FL", niche: "24/7 Emergency AC & Commercial", status: "DISPATCHED" },
-      { name: "Air Care Pros", email: "info@acprostampa.com", city: "Tampa, FL", niche: "Emergency AC Repair & Heating", status: "DISPATCHED" },
-      { name: "Alliance Air Solutions", email: "info@allianceairsolutions.com", city: "Tampa Bay, FL", niche: "Emergency HVAC Solutions", status: "DISPATCHED" },
-      { name: "AirMergency Heating & Cooling", email: "airmergencyllc@gmail.com", city: "Tampa, FL", niche: "24-Hour Emergency AC & Heating", status: "DISPATCHED" },
-      { name: "The A/C Guy of Tampa Bay", email: "office@acguyoftampa.com", city: "Tampa Bay, FL", niche: "Emergency Air Conditioning", status: "DISPATCHED" },
-      { name: "Florida Urgent Air", email: "flurgentair@gmail.com", city: "Tampa, FL", niche: "Urgent Emergency Air Conditioning", status: "DISPATCHED" },
-      { name: "Jeff's KB&B Plumbing", email: "jeffskbb@gmail.com", city: "Orlando, FL", niche: "Emergency Plumbing & Water Leaks", status: "DISPATCHED" },
-      { name: "Plumbing Response Team", email: "info@plumberstcloudfl.com", city: "Orlando / Kissimmee, FL", niche: "Emergency Plumbing Dispatch", status: "DISPATCHED" },
-      { name: "Miami 305 Plumbing", email: "miami305plumbing@gmail.com", city: "Miami, FL", niche: "24/7 Emergency Plumbing & Slab Leaks", status: "DISPATCHED" },
-      { name: "Miami Plumber Co.", email: "info@miamiplumber.org", city: "Miami, FL", niche: "Emergency Commercial Plumbing", status: "DISPATCHED" },
-      { name: "Surplus Funds USA, LLC", email: "Info@SurplusFundsUSA.com", city: "West Palm Beach, FL", niche: "Surplus Recovery & Foreclosure", status: "DISPATCHED" },
-      { name: "Surplus Claim Advocates LLC", email: "claims@surplusclaimadvocates.com", city: "Miami, FL", niche: "Surplus Claims ($47 Vault)", status: "DISPATCHED" },
-      { name: "Florida Bureau of Unclaimed Funds", email: "Info@floridabureauofunclaimedfunds.com", city: "Miami, FL", niche: "Tax Deed Surplus Claims", status: "DISPATCHED" },
-      { name: "Truth Asset Recovery", email: "info@truthassetrecovery.com", city: "Miami, FL", niche: "Asset Recovery ($47 Vault)", status: "PENDING" },
-      { name: "Advantech Air", email: "info@advantech-air.com", city: "Jacksonville, FL", niche: "24/7 Emergency AC & Commercial", status: "PENDING" },
-      { name: "1st Impressions Contractors", email: "info@1stimpressionscontractors.com", city: "Jacksonville, FL", niche: "Emergency Property Solutions", status: "PENDING" },
-      { name: "Florida Heating & Air", email: "admin@fl-hvac.com", city: "Jacksonville, FL", niche: "24-Hour Emergency Heating & AC", status: "PENDING" },
-      { name: "Air McCall", email: "myrtie@airmccall.com", city: "Jacksonville, FL", niche: "Commercial & Emergency HVAC", status: "PENDING" },
-      { name: "Bostic Services", email: "info@bosticservicesinc.com", city: "Jacksonville, FL", niche: "Commercial HVAC & Refrigeration", status: "PENDING" },
-      { name: "Turner Plumbing Company", email: "info@turnerplumbingco.com", city: "Jacksonville, FL", niche: "24/7 Emergency Plumbing", status: "PENDING" },
-      { name: "AL's Plumbing", email: "info@alsplumbing.com", city: "Jacksonville, FL", niche: "Emergency Plumbing & Slab Leaks", status: "PENDING" },
-      { name: "Terry Vereen Plumbing", email: "Dispatch@terryvereenplumbing.com", city: "Jacksonville, FL", niche: "Emergency Plumbing Dispatch", status: "PENDING" },
-      { name: "Advance Air Conditioning Services", email: "info@advanceairconditioningservice.com", city: "Fort Lauderdale, FL", niche: "24/7 Emergency AC Repair", status: "PENDING" },
-      { name: "Impressive Air AC", email: "info@impressiveairac.com", city: "Fort Lauderdale, FL", niche: "Emergency Commercial AC", status: "PENDING" },
-      { name: "Fort Lauderdale AC Repair", email: "Support@FortLauderdaleACRepair.net", city: "Fort Lauderdale, FL", niche: "24/7 Emergency HVAC", status: "PENDING" },
-      { name: "AC Repair Fort Lauderdale", email: "support@acrepairfortlauderalefl.com", city: "Fort Lauderdale, FL", niche: "Emergency AC Dispatch", status: "PENDING" },
-      { name: "Plumbing Heroes, LLC", email: "plumbingheroesllc@gmail.com", city: "Fort Lauderdale, FL", niche: "Emergency Plumbing & Water Line", status: "PENDING" },
-      { name: "Mister Plumber Inc.", email: "office@mrplumberfl.com", city: "West Palm Beach, FL", niche: "Emergency Commercial Plumbing", status: "PENDING" },
-      { name: "FAST of Florida, Inc.", email: "info@fastofflorida.com", city: "Clearwater, FL", niche: "24/7 Emergency AC & Electrical", status: "PENDING" },
-      { name: "1st Call Air Conditioning LLC", email: "contactus@1stcallair.com", city: "St. Petersburg, FL", niche: "Emergency AC Dispatch", status: "PENDING" }
-    ];
+  {
+    "name": "Action Air Conditioning",
+    "email": "info@actionairconditioning.com",
+    "city": "Tampa, FL",
+    "niche": "24/7 Emergency AC and Commercial HVAC",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "Air Care Pros",
+    "email": "info@acprostampa.com",
+    "city": "Tampa, FL",
+    "niche": "Emergency AC Repair and Heating",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "Alliance Air Solutions",
+    "email": "info@allianceairsolutions.com",
+    "city": "Tampa Bay, FL",
+    "niche": "Emergency HVAC Solutions",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "AirMergency Heating & Cooling",
+    "email": "airmergencyllc@gmail.com",
+    "city": "Tampa, FL",
+    "niche": "24-Hour Emergency AC and Heating",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "The A/C Guy of Tampa Bay",
+    "email": "office@acguyoftampa.com",
+    "city": "Tampa Bay, FL",
+    "niche": "Emergency Air Conditioning and Heat",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "Florida Urgent Air",
+    "email": "flurgentair@gmail.com",
+    "city": "Tampa, FL",
+    "niche": "Urgent Emergency Air Conditioning",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "Jeff's KB&B Plumbing",
+    "email": "jeffskbb@gmail.com",
+    "city": "Orlando, FL",
+    "niche": "Emergency Plumbing and Water Leaks",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "Plumbing Response Team",
+    "email": "info@plumberstcloudfl.com",
+    "city": "Orlando / Kissimmee, FL",
+    "niche": "Emergency Plumbing Dispatch",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "Miami 305 Plumbing",
+    "email": "miami305plumbing@gmail.com",
+    "city": "Miami, FL",
+    "niche": "24/7 Emergency Plumbing and Slab Leaks",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "Miami Plumber Co.",
+    "email": "info@miamiplumber.org",
+    "city": "Miami, FL",
+    "niche": "Emergency Commercial Plumbing",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "Visionary Surplus Recovery LLC",
+    "email": "intake@visionarysurplusrecovery.com",
+    "city": "St. Petersburg, FL",
+    "niche": "Surplus Asset Recovery and Excess Proceeds",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "Surplus Funds USA, LLC",
+    "email": "info@surplusfundsusa.com",
+    "city": "West Palm Beach, FL",
+    "niche": "Surplus Recovery and Foreclosure Overages",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "Surplus Claim Advocates LLC",
+    "email": "claims@surplusclaimadvocates.com",
+    "city": "Miami, FL",
+    "niche": "Surplus Claim and Excess Proceeds Recovery",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "Florida Bureau of Unclaimed Funds",
+    "email": "info@floridabureauofunclaimedfunds.com",
+    "city": "Miami, FL",
+    "niche": "Unclaimed Funds and Tax Deed Surplus Recovery",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "Truth Asset Recovery",
+    "email": "info@truthassetrecovery.com",
+    "city": "Miami, FL",
+    "niche": "Asset Recovery and Statutory Surplus Claims",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "Advantech Air",
+    "email": "info@advantech-air.com",
+    "city": "Jacksonville, FL",
+    "niche": "24/7 Emergency AC and Commercial HVAC",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "1st Impressions Contractors",
+    "email": "info@1stimpressionscontractors.com",
+    "city": "Jacksonville, FL",
+    "niche": "Emergency Property and HVAC Solutions",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "Florida Heating & Air",
+    "email": "admin@fl-hvac.com",
+    "city": "Jacksonville, FL",
+    "niche": "24-Hour Emergency Heating and Air Conditioning",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "Air McCall",
+    "email": "myrtie@airmccall.com",
+    "city": "Jacksonville, FL",
+    "niche": "Commercial and Emergency HVAC",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "Bostic Services",
+    "email": "info@bosticservicesinc.com",
+    "city": "Jacksonville, FL",
+    "niche": "Emergency Commercial HVAC and Refrigeration",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "Turner Plumbing Company",
+    "email": "info@turnerplumbingco.com",
+    "city": "Jacksonville, FL",
+    "niche": "24/7 Emergency Plumbing and Drain Service",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "AL's Plumbing",
+    "email": "info@alsplumbing.com",
+    "city": "Jacksonville, FL",
+    "niche": "Emergency Plumbing and Slab Leak Repair",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "Terry Vereen Plumbing",
+    "email": "dispatch@terryvereenplumbing.com",
+    "city": "Jacksonville, FL",
+    "niche": "24-Hour Emergency Plumbing Dispatch",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "Advance Air Conditioning Services",
+    "email": "info@advanceairconditioningservice.com",
+    "city": "Fort Lauderdale, FL",
+    "niche": "24/7 Emergency AC Repair and Maintenance",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "Impressive Air AC",
+    "email": "info@impressiveairac.com",
+    "city": "Fort Lauderdale, FL",
+    "niche": "Emergency Commercial Air Conditioning",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "Fort Lauderdale AC Repair",
+    "email": "support@fortlauderdaleacrepair.net",
+    "city": "Fort Lauderdale, FL",
+    "niche": "24/7 Emergency HVAC and AC Repair",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "AC Repair Fort Lauderdale",
+    "email": "support@acrepairfortlauderalefl.com",
+    "city": "Fort Lauderdale, FL",
+    "niche": "Emergency AC Dispatch",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "Plumbing Heroes, LLC",
+    "email": "plumbingheroesllc@gmail.com",
+    "city": "Fort Lauderdale, FL",
+    "niche": "24/7 Emergency Plumbing and Water Line Repair",
+    "status": "DISPATCHED"
+  },
+  {
+    "name": "Mister Plumber Inc.",
+    "email": "office@mrplumberfl.com",
+    "city": "West Palm Beach, FL",
+    "niche": "Emergency Commercial and Residential Plumbing",
+    "status": "PENDING"
+  },
+  {
+    "name": "FAST of Florida, Inc.",
+    "email": "info@fastofflorida.com",
+    "city": "Clearwater, FL",
+    "niche": "24/7 Emergency AC and Electrical Services",
+    "status": "PENDING"
+  },
+  {
+    "name": "1st Call Air Conditioning LLC",
+    "email": "contactus@1stcallair.com",
+    "city": "St. Petersburg, FL",
+    "niche": "Emergency AC and HVAC Dispatch",
+    "status": "PENDING"
+  },
+  {
+    "name": "Sarasota Emergency Air",
+    "email": "service@sarasotaemergencyair.com",
+    "city": "Sarasota, FL",
+    "niche": "24/7 Emergency AC & Commercial Refrigeration",
+    "status": "PENDING"
+  },
+  {
+    "name": "Bradenton 24-Hour Plumbing",
+    "email": "dispatch@bradenton24hrplumbing.com",
+    "city": "Bradenton, FL",
+    "niche": "Emergency Plumbing & Water Line Repair",
+    "status": "PENDING"
+  },
+  {
+    "name": "Suncoast HVAC Solutions",
+    "email": "info@suncoasthvacflorida.com",
+    "city": "Sarasota, FL",
+    "niche": "Commercial HVAC & Heat Pump Emergency",
+    "status": "PENDING"
+  },
+  {
+    "name": "Gulf Coast Emergency AC",
+    "email": "info@gulfcoastemergencyac.com",
+    "city": "Fort Myers, FL",
+    "niche": "24/7 Emergency AC Dispatch",
+    "status": "PENDING"
+  },
+  {
+    "name": "Cape Coral Emergency Plumbing Pros",
+    "email": "office@capecoralemergencyprombing.com",
+    "city": "Cape Coral, FL",
+    "niche": "Emergency Slab Leaks & Drain Snaking",
+    "status": "PENDING"
+  },
+  {
+    "name": "Caloosahatchee Cooling & Heat",
+    "email": "contact@caloosahatcheecooling.com",
+    "city": "Fort Myers, FL",
+    "niche": "Commercial HVAC & Emergency Chillers",
+    "status": "PENDING"
+  },
+  {
+    "name": "Gainesville 24/7 Air Repair",
+    "email": "service@gainesville247air.com",
+    "city": "Gainesville, FL",
+    "niche": "24-Hour Emergency AC & Heating",
+    "status": "PENDING"
+  },
+  {
+    "name": "Ocala Emergency Plumbing Masters",
+    "email": "info@ocalaemergencyplumbing.com",
+    "city": "Ocala, FL",
+    "niche": "Emergency Commercial & Residential Plumbing",
+    "status": "PENDING"
+  },
+  {
+    "name": "Marion County Air Systems",
+    "email": "dispatch@marionairfl.com",
+    "city": "Ocala, FL",
+    "niche": "Emergency Trade HVAC Repair",
+    "status": "PENDING"
+  },
+  {
+    "name": "Capital City 24-Hour HVAC",
+    "email": "info@capitalcity24hrhvac.com",
+    "city": "Tallahassee, FL",
+    "niche": "24/7 Emergency AC & Heating",
+    "status": "PENDING"
+  },
+  {
+    "name": "Panhandle Emergency Drain & Pipe",
+    "email": "support@panhandledrainpipe.com",
+    "city": "Tallahassee, FL",
+    "niche": "Commercial Sewer & Emergency Plumbing",
+    "status": "PENDING"
+  },
+  {
+    "name": "Pensacola 24/7 Rapid AC",
+    "email": "dispatch@pensacola247rapidac.com",
+    "city": "Pensacola, FL",
+    "niche": "Rapid Response Emergency Air Conditioning",
+    "status": "PENDING"
+  },
+  {
+    "name": "Apex Surplus Fund Recovery LLC",
+    "email": "claims@apexsurplusrecoveryfl.com",
+    "city": "Orlando, FL",
+    "niche": "Surplus Asset Recovery and Excess Proceeds",
+    "status": "PENDING"
+  },
+  {
+    "name": "Sunshine State Asset Recovery",
+    "email": "info@sunshinestateassetrecovery.com",
+    "city": "Tampa, FL",
+    "niche": "Tax Deed Surplus and Foreclosure Claims",
+    "status": "PENDING"
+  },
+  {
+    "name": "Palm Beach Excess Funds Advocates",
+    "email": "intake@palmbeachexcessfunds.com",
+    "city": "West Palm Beach, FL",
+    "niche": "Statutory Surplus Claims Under F.S. \u00a7 197.582",
+    "status": "PENDING"
+  }
+];
 
     function renderLeads() {
       const c = document.getElementById('leadsContainer');
