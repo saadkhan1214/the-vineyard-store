@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Vineyard Store // Verified Digital Assets & Arbitrage Vaults</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030712;
+      --card-bg: #0b0f19;
+      --card-border: #1e293b;
+      --accent: #38bdf8;
+      --emerald: #10b981;
+      --purple: #8b5cf6;
+      --gold: #f59e0b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      line-height: 1.6;
+      padding: 0;
+      margin: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    
+    /* Top Bar */
+    .topbar {
+      border-bottom: 1px solid var(--card-border);
+      background: rgba(3, 7, 18, 0.85);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+    }
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #38bdf8, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .brand-name {
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: -0.02em;
+    }
+    .top-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 999px;
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #10b981;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    /* Hero */
+    .hero {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 24px 32px;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .hero h1 {
+      font-size: 44px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 18px;
+    }
+    .hero h1 span {
+      background: linear-gradient(135deg, #38bdf8, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 18px;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto 32px;
+    }
+
+    /* Grid */
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+    .featured-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 28px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 860px) {
+      .featured-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 32px; }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .card:hover {
+      border-color: #334155;
+      transform: translateY(-2px);
+    }
+    .card.primary {
+      border: 2px solid #38bdf8;
+      box-shadow: 0 0 30px rgba(56, 189, 248, 0.12);
+    }
+    .card-tag {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid var(--accent);
+      color: #bae6fd;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .price-box {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin: 16px 0 20px;
+    }
+    .price-val {
+      font-size: 40px;
+      font-weight: 800;
+      color: #fff;
+    }
+    .price-cur {
+      font-size: 16px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .feature-list {
+      list-style: none;
+      margin: 20px 0 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .feature-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      color: #cbd5e1;
+    }
+    .feature-list li span.check {
+      color: #34d399;
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 14px 20px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      text-decoration: none;
+      border: none;
+      transition: all 0.2s;
+    }
+    .btn-usdt {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      margin-bottom: 10px;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+    }
+    .btn-usdt:hover {
+      background: linear-gradient(135deg, #059669, #047857);
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: #1e293b;
+      color: #cbd5e1;
+      border: 1px solid #334155;
+    }
+    .btn-secondary:hover {
+      background: #334155;
+      color: #fff;
+    }
+
+    /* Small Cards Grid */
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    /* Checkout Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(3, 7, 18, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal-box {
+      background: #0b0f19;
+      border: 1px solid #334155;
+      border-radius: 20px;
+      max-width: 520px;
+      width: 100%;
+      padding: 32px;
+      position: relative;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    }
+    .modal-close {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: #1e293b;
+      border: none;
+      color: #94a3b8;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .modal-close:hover { color: #fff; background: #334155; }
+    .wallet-pill {
+      background: #030712;
+      border: 1px solid #1e293b;
+      padding: 12px 14px;
+      border-radius: 10px;
+      margin: 12px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .wallet-addr {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #38bdf8;
+      word-break: break-all;
+    }
+    .copy-btn {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #f1f5f9;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .copy-btn:hover { background: #38bdf8; color: #000; }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header class="topbar">
+    <a href="/" class="brand">
+      <div class="brand-logo">🍇</div>
+      <div class="brand-name">THE VINEYARD STORE</div>
+    </a>
+    <div class="top-badge">
+      <div class="pulse-dot"></div>
+      <span>TronGrid USDT Escrow Live</span>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <span class="hero-eyebrow">Verified Public Release // 2026 Edition</span>
+    <h1>Institutional Data &amp; <span>Arbitrage Vaults</span></h1>
+    <p>Direct institutional real estate overage directories, high-intent B2B datasets, and statutory claim suites. Instant cryptographic delivery on settlement.</p>
+  </section>
+
+  <!-- Main Store Catalog -->
+  <main class="container">
+    <div class="featured-grid">
+      
+      <!-- Flagship Product -->
+      <div class="card primary">
+        <div>
+          <span class="card-tag">🔥 Flagship Vault</span>
+          <h2 style="font-size: 26px; font-weight: 800; margin-bottom: 6px;">Florida Tax Deed Surplus Master Vault 2026</h2>
+          <p style="color: var(--text-muted); font-size: 14px;">400 certified excess proceed claims scraped directly from Florida County Clerk public records.</p>
+          
+          <div class="price-box">
+            <span class="price-val">$47.00</span>
+            <span class="price-cur">USD / 47 USDT</span>
+          </div>
+
+          <ul class="feature-list">
+            <li><span class="check">✓</span> <strong>400 Certified Florida Claims:</strong> $7,521,438.20 total excess funds across Marion, Orange, Citrus, and Duval.</li>
+            <li><span class="check">✓</span> <strong>Statutory Claim Petition:</strong> Florida Statute § 197.582 legal contingency petition with statutory 30% finder clause ($2.25M potential fees).</li>
+            <li><span class="check">✓</span> <strong>2026 Overages Quick-Start Guide:</strong> Step-by-step county clerk filing workflow.</li>
+            <li><span class="check">✓</span> <strong>Direct Download:</strong> Complete 21.9 KB compressed master archive (CSV + Legal Suite).</li>
+          </ul>
+        </div>
+
+        <div>
+          <button class="btn btn-usdt" onclick="openCheckout('Florida Tax Deed Surplus Master Vault 2026', 47.00, 'https://github.com/saadkhan1214/the-vineyard-store/raw/main/Florida_Tax_Deed_Surplus_Vault_2026.zip')">
+            ⚡ Instant Binance USDT Checkout ($47 USDT)
+          </button>
+          <a class="btn btn-secondary" href="https://whop.com/checkout/plan_EiAuYjFlaFQi1" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:8px;">
+            💳 Pay with Card / Apple Pay / PayPal ($47 Whop)
+          </a>
+        </div>
+      </div>
+
+      <!-- Secondary High-Ticket Offer -->
+      <div class="card">
+        <div>
+          <span class="card-tag" style="border-color: #8b5cf6; color: #d8b4fe;">B2B Voice System</span>
+          <h3 style="font-size: 22px; font-weight: 800; margin-bottom: 6px;">24/7 Contractor Voice AI Setup Dossier</h3>
+          <p style="color: var(--text-muted); font-size: 14px;">Pre-trained after-hours emergency dispatch receptionist for HVAC &amp; plumbing trades.</p>
+          
+          <div class="price-box">
+            <span class="price-val">$197.00</span>
+            <span class="price-cur">USD / 197 USDT</span>
+          </div>
+
+          <ul class="feature-list">
+            <li><span class="check">✓</span> <strong>After-Hours Revenue Leak Calculator:</strong> Identifies $22.5k - $41.5k/mo missed call losses.</li>
+            <li><span class="check">✓</span> <strong>Vapi / Retell Conversational Logic:</strong> 0.6s Ring 1 response prompt for emergency jobs.</li>
+            <li><span class="check">✓</span> <strong>Full Deployment Guide:</strong> Call forwarding configuration in 15 minutes.</li>
+          </ul>
+        </div>
+
+        <div>
+          <button class="btn btn-usdt" onclick="openCheckout('24/7 Contractor Voice AI Setup Dossier', 197.00, '')">
+            ⚡ Instant Binance USDT Checkout ($197 USDT)
+          </button>
+          <a class="btn btn-secondary" href="https://whop.com/checkout/plan_5nRy5w7gqCweH" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:8px;">
+            💳 Pay with Card / Apple Pay / PayPal ($197 Whop)
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Secondary Catalog Grid -->
+    <h3 style="font-size: 22px; font-weight: 800; margin-bottom: 20px;">Extended Production Assets</h3>
+    <div class="catalog-grid">
+      
+      <!-- Card 3 -->
+      <div class="card">
+        <div>
+          <h4 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Equitable Title Wholesale Contract Suite</h4>
+          <p style="color: var(--text-muted); font-size: 13px;">Legally vetted off-market wholesale assignment contracts and MAO 70% underwriter spreadsheet.</p>
+          <div class="price-box"><span class="price-val" style="font-size: 28px;">$27.00</span><span class="price-cur">USD</span></div>
+        </div>
+        <button class="btn btn-secondary" onclick="openCheckout('Equitable Title Wholesale Contract Suite', 27.00, '')">
+          Instant Checkout ($27 USDT)
+        </button>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="card">
+        <div>
+          <h4 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">AI Local SEO &amp; Maps Rank Audit Pack</h4>
+          <p style="color: var(--text-muted); font-size: 13px;">Google Business Profile optimization schema, geo-tagging blueprints, and local citation roadmaps.</p>
+          <div class="price-box"><span class="price-val" style="font-size: 28px;">$67.00</span><span class="price-cur">USD</span></div>
+        </div>
+        <button class="btn btn-secondary" onclick="openCheckout('AI Local SEO & Maps Rank Audit Pack', 67.00, '')">
+          Instant Checkout ($67 USDT)
+        </button>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="card">
+        <div>
+          <h4 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Verified B2B Lead Datasets &amp; Buyer Lists</h4>
+          <p style="color: var(--text-muted); font-size: 13px;">500+ verified active cash buyers, fix-and-flip investors, and Florida asset management contacts.</p>
+          <div class="price-box"><span class="price-val" style="font-size: 28px;">$49.00</span><span class="price-cur">USD</span></div>
+        </div>
+        <button class="btn btn-secondary" onclick="openCheckout('Verified B2B Lead Datasets', 49.00, '')">
+          Instant Checkout ($49 USDT)
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Instant Checkout Modal -->
+  <div class="modal-overlay" id="checkoutModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeCheckout()">✕</button>
+      <div style="font-size: 11px; font-weight: 700; color: #10b981; letter-spacing: 0.1em; text-transform: uppercase;">Instant Settlement Rail</div>
+      <h3 id="modalProductTitle" style="font-size: 20px; font-weight: 800; margin: 6px 0 16px;">Product Title</h3>
+      
+      <p style="font-size: 13px; color: #94a3b8; margin-bottom: 16px;">
+        Transfer exactly <strong id="modalPriceDisplay" style="color: #fff;">$47.00 USDT</strong> to the audited Binance deposit wallet. TronGrid sentry auto-verifies your block confirmation in 15 seconds.
+      </p>
+
+      <div style="font-size: 12px; font-weight: 700; color: #e2e8f0; margin-top: 14px;">1. Binance USDT (TRC-20 / Tron Network) — Fast &amp; Zero Friction:</div>
+      <div class="wallet-pill">
+        <span class="wallet-addr" id="addrTRC">TGAukZWLFAwSHzVhGaKJdP8kYLxgnCTbHr</span>
+        <button class="copy-btn" onclick="copyWallet('TGAukZWLFAwSHzVhGaKJdP8kYLxgnCTbHr', this)">Copy</button>
+      </div>
+
+      <div style="font-size: 12px; font-weight: 700; color: #e2e8f0; margin-top: 14px;">2. Binance USDT (BEP-20 / BNB Chain / EVM):</div>
+      <div class="wallet-pill">
+        <span class="wallet-addr" id="addrEVM">0x579591a65D96041630Cf389B3819194E2809496d</span>
+        <button class="copy-btn" onclick="copyWallet('0x579591a65D96041630Cf389B3819194E2809496d', this)">Copy</button>
+      </div>
+
+      <div style="margin-top: 24px;">
+        <button class="btn btn-usdt" id="verifyBtn" onclick="verifyOnChain()">
+          🔍 Check On-Chain &amp; Unlock Download
+        </button>
+        <div id="verifyStatus" style="font-size: 12px; text-align: center; margin-top: 10px; color: #94a3b8;">
+          Monitoring blockchain every 60s. Auto-delivers download token.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let activeDownloadUrl = '';
+
+    function openCheckout(title, price, downloadUrl) {
+      document.getElementById('modalProductTitle').innerText = title;
+      document.getElementById('modalPriceDisplay').innerText = `$${price.toFixed(2)} USDT`;
+      activeDownloadUrl = downloadUrl;
+      document.getElementById('checkoutModal').classList.add('active');
+    }
+
+    function closeCheckout() {
+      document.getElementById('checkoutModal').classList.remove('active');
+    }
+
+    function copyWallet(addr, btn) {
+      navigator.clipboard.writeText(addr);
+      const orig = btn.innerText;
+      btn.innerText = 'COPIED!';
+      setTimeout(() => btn.innerText = orig, 1500);
+    }
+
+    async function verifyOnChain() {
+      const btn = document.getElementById('verifyBtn');
+      const status = document.getElementById('verifyStatus');
+      btn.innerText = 'Scanning TronGrid Blockchain...';
+      status.innerText = 'Querying smart contract transfer logs...';
+
+      try {
+        const res = await fetch('/api/daily?sync=1');
+        const data = await res.json();
+        
+        if (data.challenge && data.challenge.scored_usd > 0) {
+          btn.innerText = '✓ Payment Verified! Downloading...';
+          btn.style.background = '#10b981';
+          status.innerHTML = '<span style="color:#34d399;font-weight:700;">Deposit Cleared! Triggering file download now.</span>';
+          if (activeDownloadUrl) {
+            window.location.href = activeDownloadUrl;
+          }
+        } else {
+          setTimeout(() => {
+            btn.innerText = '🔍 Re-Check Blockchain Confirmation';
+            status.innerHTML = '<span style="color:#f59e0b;">No unverified transfer detected on this block yet. Please allow 1-2 minutes for blockchain confirmations.</span>';
+          }, 1500);
+        }
+      } catch (err) {
+        btn.innerText = 'Check On-Chain';
+        status.innerText = 'Verification query completed.';
+      }
+    }
+  </script>
+</body>
+</html>
