@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>THE SOVEREIGN HIVE — Autonomous Empire Command</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090c10;
+      --card-bg: #111622;
+      --border: #222d42;
+      --accent: #58a6ff;
+      --gold: #f1c40f;
+      --green: #2ecc71;
+      --red: #e74c3c;
+      --purple: #9b59b6;
+      --text: #c9d1d9;
+      --text-muted: #8b949e;
+      --pixel-font: 'Press Start 2P', monospace;
+      --mono-font: 'Space Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--mono-font);
+      font-size: 13px;
+      line-height: 1.5;
+      padding-bottom: 40px;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(180deg, #161b26 0%, #0d1117 100%);
+      border-bottom: 2px solid var(--border);
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      font-size: 20px;
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    .brand-title {
+      font-family: var(--pixel-font);
+      font-size: 11px;
+      color: #fff;
+      letter-spacing: 1px;
+    }
+
+    .badge-live {
+      background: rgba(46, 204, 113, 0.15);
+      border: 1px solid var(--green);
+      color: var(--green);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-live::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+    }
+
+    /* Simulation Canvas Container */
+    .sim-card {
+      margin: 16px;
+      background: #000;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+    }
+
+    .sim-header {
+      background: #111622;
+      padding: 8px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--pixel-font);
+      font-size: 9px;
+      color: var(--gold);
+    }
+
+    #simCanvas {
+      display: block;
+      width: 100%;
+      height: 220px;
+      image-rendering: pixelated;
+      background: #0d131f;
+    }
+
+    .sim-legend {
+      background: rgba(17, 22, 34, 0.95);
+      padding: 6px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      font-size: 10px;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* KPI Highlights */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 0 16px;
+      margin-bottom: 16px;
+    }
+
+    @media (min-width: 600px) {
+      .kpi-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .kpi-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-box::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+    }
+
+    .kpi-gold::after { background: var(--gold); }
+    .kpi-green::after { background: var(--green); }
+    .kpi-accent::after { background: var(--accent); }
+    .kpi-purple::after { background: var(--purple); }
+
+    .kpi-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .kpi-value {
+      font-family: var(--pixel-font);
+      font-size: 15px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .kpi-sub {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Content Layout */
+    .dashboard-container {
+      padding: 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .section-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .section-header {
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: bold;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--pixel-font);
+    }
+
+    .toggle-icon {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .section-body {
+      padding: 14px;
+    }
+
+    /* Tables & Compact Lists */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    .data-table th {
+      text-align: left;
+      padding: 8px 6px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 10px;
+      text-transform: uppercase;
+    }
+
+    .data-table td {
+      padding: 10px 6px;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .badge-status {
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 9px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .badge-open {
+      background: rgba(88, 166, 255, 0.15);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+    }
+
+    .badge-active {
+      background: rgba(46, 204, 113, 0.15);
+      border: 1px solid var(--green);
+      color: var(--green);
+    }
+
+    /* Event Feed */
+    .event-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 220px;
+      overflow-y: auto;
+      font-size: 11px;
+    }
+
+    .event-item {
+      display: flex;
+      gap: 10px;
+      padding: 8px;
+      background: rgba(0,0,0,0.25);
+      border-radius: 4px;
+      border-left: 3px solid var(--border);
+    }
+
+    .event-item.BOUNTY_MINER { border-left-color: var(--gold); }
+    .event-item.MERCHANT_GUILD { border-left-color: var(--green); }
+    .event-item.API_ARCHITECT { border-left-color: var(--purple); }
+    .event-item.BOUNTY_SCOUT { border-left-color: var(--accent); }
+
+    .event-time {
+      color: var(--text-muted);
+      font-size: 9px;
+      white-space: nowrap;
+    }
+
+    .event-content {
+      flex: 1;
+    }
+
+    .event-action {
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .event-desc {
+      color: var(--text-muted);
+      font-size: 10px;
+    }
+
+    /* Payout Rails Box */
+    .rail-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 8px;
+      font-size: 11px;
+    }
+
+    .rail-name {
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .rail-addr {
+      font-size: 10px;
+      color: var(--accent);
+      font-family: var(--mono-font);
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">🏰</div>
+      <div>
+        <div class="brand-title">THE SOVEREIGN HIVE</div>
+        <div style="font-size: 9px; color: var(--text-muted);">Autonomous Empire Simulation v1.0</div>
+      </div>
+    </div>
+    <div class="badge-live">LIVE AUTONOMY</div>
+  </header>
+
+  <!-- Civilization Simulation Canvas -->
+  <div class="sim-card">
+    <div class="sim-header">
+      <span>REALMS OF SOVEREIGNTY (LIVE ACTIVITY)</span>
+      <span id="simTime">DAY 1 - 08:30</span>
+    </div>
+    <canvas id="simCanvas"></canvas>
+    <div class="sim-legend">
+      <div class="legend-item"><span>⛏️</span> <span>Bounty Miners (4 Active PRs)</span></div>
+      <div class="legend-item"><span>⛵</span> <span>Merchant Galleon (itch.io Pack)</span></div>
+      <div class="legend-item"><span>⚡</span> <span>API Spire (DevGuard Endpoint)</span></div>
+      <div class="legend-item"><span>📡</span> <span>Wallet Sentinels (Tron/EVM)</span></div>
+    </div>
+  </div>
+
+  <!-- KPI Highlights -->
+  <div class="kpi-grid">
+    <div class="kpi-box kpi-green">
+      <div class="kpi-label">24h Verified Cash</div>
+      <div class="kpi-value" id="kpiRev">$0.00</div>
+      <div class="kpi-sub">Real funds cleared</div>
+    </div>
+    <div class="kpi-box kpi-gold">
+      <div class="kpi-label">Unclaimed Escrow</div>
+      <div class="kpi-value" id="kpiEscrow">$200.00</div>
+      <div class="kpi-sub">4 Pull Requests in review</div>
+    </div>
+    <div class="kpi-box kpi-accent">
+      <div class="kpi-label">Active Assets</div>
+      <div class="kpi-value" id="kpiAssets">1</div>
+      <div class="kpi-sub">Godot 4 Dungeon Kit</div>
+    </div>
+    <div class="kpi-box kpi-purple">
+      <div class="kpi-label">Micro-APIs</div>
+      <div class="kpi-value" id="kpiApis">1</div>
+      <div class="kpi-sub">DevGuard Threat API</div>
+    </div>
+  </div>
+
+  <!-- Main Packed Subsections -->
+  <div class="dashboard-container">
+
+    <!-- Subsection 1: Stream 1 (Code Bounties) -->
+    <div class="section-card">
+      <div class="section-header" onclick="toggleSection('secBounties')">
+        <div class="section-title">
+          <span>⚔️</span> STREAM 1: PRE-FUNDED CODE BOUNTIES
+        </div>
+        <span class="toggle-icon" id="icon-secBounties">▼</span>
+      </div>
+      <div class="section-body" id="secBounties">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Target Repo</th>
+              <th>Task / PR</th>
+              <th>Escrow</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Sottara-Labs/sottara</strong></td>
+              <td>PR #584: Validate outbox read entries</td>
+              <td style="color: var(--gold);">$50.00</td>
+              <td><span class="badge-status badge-open">IN REVIEW (2 Cmnts)</span></td>
+            </tr>
+            <tr>
+              <td><strong>Sottara-Labs/sottara</strong></td>
+              <td>PR #585: Purge expired staging blobs</td>
+              <td style="color: var(--gold);">$50.00</td>
+              <td><span class="badge-status badge-open">IN REVIEW (2 Cmnts)</span></td>
+            </tr>
+            <tr>
+              <td><strong>Sottara-Labs/sottara</strong></td>
+              <td>PR #586: Scope backup restore to tenant</td>
+              <td style="color: var(--gold);">$50.00</td>
+              <td><span class="badge-status badge-open">IN REVIEW (2 Cmnts)</span></td>
+            </tr>
+            <tr>
+              <td><strong>Sottara-Labs/sottara</strong></td>
+              <td>PR #587: Surface cancellation reasons</td>
+              <td style="color: var(--gold);">$50.00</td>
+              <td><span class="badge-status badge-open">IN REVIEW (2 Cmnts)</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Subsection 2: Stream 2 & 3 (Marketplace & APIs) -->
+    <div class="section-card">
+      <div class="section-header" onclick="toggleSection('secAssets')">
+        <div class="section-title">
+          <span>📦</span> STREAM 2 & 3: MARKETPLACE ASSETS & MICRO-APIS
+        </div>
+        <span class="toggle-icon" id="icon-secAssets">▼</span>
+      </div>
+      <div class="section-body" id="secAssets">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Product / Service</th>
+              <th>Price</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span style="color: var(--green);">ASSET PACK</span></td>
+              <td>Godot 4 Procedural Dungeon & Retro Lighting Kit</td>
+              <td>$5.00</td>
+              <td><span class="badge-status badge-active">PACKAGED (.ZIP)</span></td>
+            </tr>
+            <tr>
+              <td><span style="color: var(--purple);">MICRO-API</span></td>
+              <td>DevGuard: Disposable Email & Fraud API</td>
+              <td>$9.00/mo</td>
+              <td><span class="badge-status badge-active">SERVERLESS READY</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Subsection 3: Payout Rails -->
+    <div class="section-card">
+      <div class="section-header" onclick="toggleSection('secRails')">
+        <div class="section-title">
+          <span>🏛️</span> FINANCIAL RAILS (PAKISTAN SOVEREIGN TUNNEL)
+        </div>
+        <span class="toggle-icon" id="icon-secRails">▼</span>
+      </div>
+      <div class="section-body" id="secRails">
+        <div class="rail-item">
+          <div>
+            <div class="rail-name">Binance USDT (TRC-20)</div>
+            <div class="rail-addr">TGAukZWLFAwSHzVhGaKJdP8kYLxgnCTbHr</div>
+          </div>
+          <span class="badge-status badge-active">ON-CHAIN</span>
+        </div>
+        <div class="rail-item">
+          <div>
+            <div class="rail-name">Binance USDT (EVM)</div>
+            <div class="rail-addr">0x579591a65D96041630Cf389B3819194E2809496d</div>
+          </div>
+          <span class="badge-status badge-active">ON-CHAIN</span>
+        </div>
+        <div class="rail-item">
+          <div>
+            <div class="rail-name">SadaPay Local Bank Clearing</div>
+            <div class="rail-addr">IBAN: PK45SADA0000003132897744</div>
+          </div>
+          <span class="badge-status badge-active">SWIFT / WIRE</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subsection 4: Live Event Log -->
+    <div class="section-card">
+      <div class="section-header" onclick="toggleSection('secEvents')">
+        <div class="section-title">
+          <span>📜</span> CIVILIZATION ACTIVITY LOG
+        </div>
+        <span class="toggle-icon" id="icon-secEvents">▼</span>
+      </div>
+      <div class="section-body" id="secEvents">
+        <div class="event-feed" id="eventFeed">
+          <div class="event-item API_ARCHITECT">
+            <div class="event-time">08:30:45</div>
+            <div class="event-content">
+              <div class="event-action">API_ARCHITECT: Registered Micro-Service</div>
+              <div class="event-desc">DevGuard Disposable Email & Fraud API ready for RapidAPI ($9/mo)</div>
+            </div>
+          </div>
+          <div class="event-item MERCHANT_GUILD">
+            <div class="event-time">08:30:12</div>
+            <div class="event-content">
+              <div class="event-action">MERCHANT_GUILD: Packaged Digital Asset</div>
+              <div class="event-desc">Created godot4_procedural_dungeon_starter_kit.zip ($5.00)</div>
+            </div>
+          </div>
+          <div class="event-item BOUNTY_SCOUT">
+            <div class="event-time">08:30:09</div>
+            <div class="event-content">
+              <div class="event-action">BOUNTY_SCOUT: Scanned GitHub Issues</div>
+              <div class="event-desc">28 open bounty candidate issues evaluated</div>
+            </div>
+          </div>
+          <div class="event-item BOUNTY_MINER">
+            <div class="event-time">08:30:08</div>
+            <div class="event-content">
+              <div class="event-action">BOUNTY_MINER: Synced PR #587</div>
+              <div class="event-desc">Sottara-Labs/sottara: 2 comments | $50.00 escrow</div>
+            </div>
+          </div>
+          <div class="event-item BOUNTY_MINER">
+            <div class="event-time">08:30:04</div>
+            <div class="event-content">
+              <div class="event-action">BOUNTY_MINER: Synced PR #584</div>
+              <div class="event-desc">Sottara-Labs/sottara: 2 comments | $50.00 escrow</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- JavaScript: Animated Civilization Canvas & Interaction -->
+  <script>
+    // Collapsible Sections
+    function toggleSection(id) {
+      const el = document.getElementById(id);
+      const icon = document.getElementById('icon-' + id);
+      if (el.style.display === 'none') {
+        el.style.display = 'block';
+        icon.innerText = '▼';
+      } else {
+        el.style.display = 'none';
+        icon.innerText = '►';
+      }
+    }
+
+    // Canvas Virtual Civilization Simulation
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = 220;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Simulation Entities
+    const citadel = { x: 0, y: 0, size: 28 };
+    const mountain = { x: 0, y: 0, size: 36 };
+    const port = { x: 0, y: 0, size: 30 };
+    const spire = { x: 0, y: 0, size: 24 };
+
+    // Miners (Bounty Workers)
+    const miners = [
+      { x: 0, y: 0, target: 'mountain', progress: 0.1, speed: 0.006, carrying: false, pr: '#584' },
+      { x: 0, y: 0, target: 'mountain', progress: 0.35, speed: 0.005, carrying: true, pr: '#585' },
+      { x: 0, y: 0, target: 'citadel', progress: 0.65, speed: 0.007, carrying: false, pr: '#586' },
+      { x: 0, y: 0, target: 'citadel', progress: 0.85, speed: 0.006, carrying: true, pr: '#587' }
+    ];
+
+    // Merchant Galleon
+    const galleon = { progress: 0.2, speed: 0.004, toPort: true };
+
+    let simTicks = 0;
+
+    function renderSimulation() {
+      simTicks++;
+      const w = canvas.width;
+      const h = canvas.height;
+
+      // Update positions based on canvas size
+      citadel.x = w * 0.5;
+      citadel.y = h * 0.52;
+      
+      mountain.x = w * 0.16;
+      mountain.y = h * 0.35;
+      
+      port.x = w * 0.84;
+      port.y = h * 0.7;
+
+      spire.x = w * 0.5;
+      spire.y = h * 0.18;
+
+      // Clear Canvas (Retro Dark Map)
+      ctx.fillStyle = '#0a0f1d';
+      ctx.fillRect(0, 0, w, h);
+
+      // Draw subtle grid
+      ctx.strokeStyle = '#141d2f';
+      ctx.lineWidth = 1;
+      const gridSize = 24;
+      for (let x = 0; x < w; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h);
+        ctx.stroke();
+      }
+      for (let y = 0; y < h; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+
+      // Draw Roads / Trade Routes
+      ctx.setLineDash([4, 4]);
+      ctx.strokeStyle = '#25354e';
+      ctx.lineWidth = 2;
+      
+      // Road: Citadel to Mountain (Code Bounties)
+      ctx.beginPath();
+      ctx.moveTo(citadel.x, citadel.y);
+      ctx.lineTo(mountain.x, mountain.y);
+      ctx.stroke();
+
+      // Road: Citadel to Port (Marketplace)
+      ctx.beginPath();
+      ctx.moveTo(citadel.x, citadel.y);
+      ctx.lineTo(port.x, port.y);
+      ctx.stroke();
+
+      // Road: Citadel to Spire (Micro-API)
+      ctx.beginPath();
+      ctx.moveTo(citadel.x, citadel.y);
+      ctx.lineTo(spire.x, spire.y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Draw Landmarks
+      // 1. Mountain (GitHub Repos / Bounties)
+      ctx.fillStyle = '#2c3e50';
+      ctx.beginPath();
+      ctx.moveTo(mountain.x, mountain.y - 24);
+      ctx.lineTo(mountain.x - 28, mountain.y + 16);
+      ctx.lineTo(mountain.x + 28, mountain.y + 16);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = '#ecf0f1';
+      ctx.beginPath();
+      ctx.moveTo(mountain.x, mountain.y - 24);
+      ctx.lineTo(mountain.x - 10, mountain.y - 8);
+      ctx.lineTo(mountain.x + 10, mountain.y - 8);
+      ctx.closePath();
+      ctx.fill();
+      
+      ctx.font = '9px monospace';
+      ctx.fillStyle = '#8b949e';
+      ctx.fillText('CODE PEAKS', mountain.x - 28, mountain.y + 28);
+
+      // 2. Port (Marketplace)
+      ctx.fillStyle = '#16a085';
+      ctx.fillRect(port.x - 18, port.y - 8, 36, 18);
+      ctx.fillStyle = '#8b949e';
+      ctx.fillText('ITCH/WHOP DOCKS', port.x - 42, port.y + 22);
+
+      // 3. API Spire (RapidAPI)
+      ctx.fillStyle = '#8e44ad';
+      ctx.fillRect(spire.x - 6, spire.y - 18, 12, 28);
+      const glow = (Math.sin(simTicks * 0.1) + 1) * 0.5;
+      ctx.fillStyle = `rgba(155, 89, 182, ${glow})`;
+      ctx.beginPath();
+      ctx.arc(spire.x, spire.y - 20, 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#8b949e';
+      ctx.fillText('API SPIRE', spire.x - 24, spire.y - 26);
+
+      // 4. Citadel (The Core Sovereign Fortress)
+      ctx.fillStyle = '#e67e22';
+      ctx.fillRect(citadel.x - 16, citadel.y - 14, 32, 28);
+      ctx.fillStyle = '#d35400';
+      ctx.fillRect(citadel.x - 20, citadel.y - 6, 8, 20);
+      ctx.fillRect(citadel.x + 12, citadel.y - 6, 8, 20);
+      ctx.fillStyle = '#f1c40f';
+      ctx.font = '10px monospace';
+      ctx.fillText('CITADEL', citadel.x - 22, citadel.y + 26);
+
+      // Update & Draw Miners (Bounty Workers)
+      miners.forEach(m => {
+        m.progress += m.speed;
+        if (m.progress >= 1.0) {
+          m.progress = 0;
+          m.carrying = !m.carrying;
+        }
+
+        // Interpolate along Citadel <-> Mountain path
+        const t = m.carrying ? (1.0 - m.progress) : m.progress;
+        const curX = citadel.x + (mountain.x - citadel.x) * t;
+        const curY = citadel.y + (mountain.y - citadel.y) * t;
+
+        // Draw Miner Unit
+        ctx.fillStyle = m.carrying ? '#f1c40f' : '#58a6ff';
+        ctx.beginPath();
+        ctx.arc(curX, curY, 4, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Label PR
+        ctx.fillStyle = '#c9d1d9';
+        ctx.font = '8px monospace';
+        ctx.fillText(m.pr + (m.carrying ? ' ⛏️' : ''), curX - 10, curY - 7);
+      });
+
+      // Update & Draw Galleon (Marketplace Trade)
+      galleon.progress += galleon.speed;
+      if (galleon.progress >= 1.0) {
+        galleon.progress = 0;
+        galleon.toPort = !galleon.toPort;
+      }
+      const gt = galleon.toPort ? galleon.progress : (1.0 - galleon.progress);
+      const gx = citadel.x + (port.x - citadel.x) * gt;
+      const gy = citadel.y + (port.y - citadel.y) * gt;
+
+      ctx.fillStyle = '#2ecc71';
+      ctx.beginPath();
+      ctx.arc(gx, gy, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.font = '8px monospace';
+      ctx.fillText('⛵ ASSET CARAVAN', gx - 20, gy - 8);
+
+      requestAnimationFrame(renderSimulation);
+    }
+
+    renderSimulation();
+  </script>
+</body>
+</html>
